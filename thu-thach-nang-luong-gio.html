@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thử thách Năng lượng gió</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#1c6476;--soft:#def1f1;--mid:#a1d3d2;--ink:#3f2e12;--paper:#fff;--grid:#dde6e6;--good:#4d8a3a;--bad:#d9544b;--on-teal:#fff;--c1:#1c6476;--c2:#7d8a3a;--c3:#e5655c;--c4:#d99a2b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--grid:#1c343b;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;color-scheme:dark}}
+:root[data-theme="dark"]{--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--grid:#1c343b;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px;color:var(--ink);font:500 18px/1.5 Quicksand,"Trebuchet MS",system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 18px 40px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;font:800 22px/1 "Baloo 2",system-ui,sans-serif;color:var(--teal)}
+.brand svg{width:44px;height:44px}
+.rot{transform-origin:32px 22px;animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ghost{border:2px solid var(--teal);background:transparent;color:var(--teal);border-radius:999px;padding:8px 14px;font:700 14px Quicksand,sans-serif;cursor:pointer}
+.card{background:var(--soft);border-radius:56px 84px 60px 76px/64px 60px 80px 56px;padding:clamp(22px,4vw,48px);position:relative}
+h1,h2{font-family:"Baloo 2",system-ui,sans-serif;font-weight:800;color:var(--teal);line-height:1.05;margin:0 0 12px}
+h1{font-size:clamp(38px,7vw,76px)}
+h2{font-size:clamp(30px,5vw,52px)}
+p{margin:0 0 14px}
+.center{text-align:center}
+.btn{border:0;border-radius:18px;background:var(--teal);color:var(--on-teal);font:800 clamp(18px,2.4vw,24px) "Baloo 2",sans-serif;padding:12px 28px;cursor:pointer;box-shadow:0 5px 0 var(--mid)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--mid)}
+button:focus-visible{outline:4px solid var(--c4);outline-offset:3px}
+.keys{color:var(--teal);font-weight:700;font-size:15px;margin-top:18px}
+.hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font:800 20px "Baloo 2",sans-serif;color:var(--teal)}
+.hud span{background:var(--paper);border-radius:999px;padding:4px 16px}
+.bar{height:12px;border-radius:99px;background:var(--paper);overflow:hidden;margin:14px 0 22px}
+.bar i{display:block;height:100%;width:100%;background:var(--c2);border-radius:99px;transition:background .3s}
+.bar i.low{background:var(--c3)}
+.topic{display:inline-block;background:var(--paper);color:var(--teal);font-weight:700;border-radius:12px;padding:4px 12px;margin-bottom:10px}
+.q{font:800 clamp(26px,4.2vw,52px)/1.15 "Baloo 2",sans-serif;color:var(--ink);margin:0 0 24px}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.a{display:flex;align-items:center;gap:14px;text-align:left;border:3px solid var(--paper);background:var(--paper);color:var(--ink);border-radius:24px;padding:14px 16px;min-height:88px;font:700 clamp(17px,2.2vw,26px)/1.3 Quicksand,sans-serif;cursor:pointer;transition:transform .12s,border-color .12s}
+.a:hover:not(:disabled){transform:translateY(-3px);border-color:var(--teal)}
+.a:disabled{cursor:default}
+.l{flex:0 0 46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font:800 24px "Baloo 2",sans-serif}
+.a:nth-child(1) .l{background:var(--c1)}.a:nth-child(2) .l{background:var(--c2)}.a:nth-child(3) .l{background:var(--c3)}.a:nth-child(4) .l{background:var(--c4)}
+.a.good{border-color:var(--good);background:color-mix(in srgb,var(--good) 22%,var(--paper))}
+.a.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 20%,var(--paper))}
+.fb{margin-top:18px;background:var(--paper);border-radius:22px;padding:14px 18px;font-size:clamp(16px,2vw,23px);font-weight:700}
+.fb b{color:var(--teal)}
+.row{display:flex;justify-content:flex-end;margin-top:16px}
+.big{font:800 clamp(60px,12vw,130px)/1 "Baloo 2",sans-serif;color:var(--teal);margin:6px 0}
+.spark{position:fixed;top:-40px;font-size:30px;animation:fall 2.4s ease-in forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media(max-width:640px){.ans{grid-template-columns:1fr}.card{border-radius:36px}}
+@media(prefers-reduced-motion:reduce){.rot,.spark{animation:none}.a,.bar i{transition:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+  <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M30 24h4l3 38H27z" fill="#a1d3d2"/><g class="rot" fill="#1c6476"><path d="M32 22C28 12 29 5 32 2c3 3 4 10 0 20z"/><path d="M32 22c10-2 16 1 19 5-4 3-11 3-19-5z"/><path d="M32 22c-8 6-8 13-8 18 5-2 10-8 8-18z"/></g><circle cx="32" cy="22" r="4" fill="#d99a2b"/></svg>Nhóm 05</div>
+  <button class="ghost" id="fs" type="button">Toàn màn hình</button>
+</header>
+
+<section class="card center" id="start">
+  <h1>Thử thách<br>Năng lượng gió</h1>
+  <p>5 câu hỏi, mỗi câu 20 giây. Trả lời càng nhanh, điểm càng cao.</p>
+  <button class="btn" id="go" type="button">Bắt đầu chơi</button>
+  <p class="keys">Phím A–D hoặc 1–4 để chọn đáp án. Enter hoặc phím cách để sang câu tiếp.</p>
+</section>
+
+<section class="card" id="play" hidden>
+  <div class="hud"><span id="step"></span><span id="sc"></span><span id="st"></span></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="topic" id="topic"></div>
+  <h2 class="q" id="q"></h2>
+  <div class="ans" id="ans"></div>
+  <div class="fb" id="fb" hidden></div>
+  <div class="row"><button class="btn" id="nx" type="button" hidden></button></div>
+</section>
+
+<section class="card center" id="end" hidden>
+  <div class="big" id="trophy"></div>
+  <h2 id="rt"></h2>
+  <p id="rx"></p>
+  <p class="q" id="fin"></p>
+  <button class="btn" id="again" type="button">Chơi lại</button>
+  <p class="keys">Nhấn R hoặc Enter để chơi lại.</p>
+</section>
+</main>
+
+<script>
+const SRC=[
+{t:'🌪️ Nguyên lý',q:'Trong turbine gió, năng lượng được chuyển đổi theo trình tự nào?',o:['Điện năng → Cơ năng → Động năng của gió','Động năng của gió → Cơ năng → Điện năng','Nhiệt năng → Hóa năng → Điện năng','Ánh sáng → Nhiệt năng → Cơ năng'],a:1,e:'Gió làm quay rotor tạo ra cơ năng, rồi máy phát chuyển cơ năng thành điện năng.'},
+{t:'🌀 Phân loại turbine',q:'Đặc điểm nào đúng với turbine trục ngang (HAWT)?',o:['Nhận gió từ mọi hướng và luôn có hiệu suất thấp hơn','Chỉ dùng được ngoài khơi','Phổ biến và có hiệu suất cao','Không cần gió để hoạt động'],a:2,e:'HAWT là loại trục ngang phổ biến, có hiệu suất cao.'},
+{t:'🌊 Vị trí lắp đặt',q:'Đâu là đặc điểm thường gặp của điện gió ngoài khơi (offshore)?',o:['Gió mạnh, ổn định hơn nhưng chi phí cao','Không cần móng turbine','Luôn rẻ hơn điện gió trên bờ','Không ảnh hưởng đến sinh vật biển'],a:0,e:'Ngoài khơi gió mạnh và ổn định, nhưng chi phí xây dựng cao hơn; thi công móng cũng có thể ảnh hưởng sinh vật biển.'},
+{t:'🍃 Tác động tích cực',q:'Vì sao điện gió được xem là nguồn năng lượng phát thải thấp?',o:['Vì turbine hấp thụ toàn bộ CO₂ trong không khí','Vì khi vận hành không đốt nhiên liệu nên phát thải trực tiếp rất thấp','Vì chế tạo turbine không cần vật liệu','Vì điện gió không tạo ra bất kỳ tác động môi trường nào'],a:1,e:'Khi vận hành, điện gió gần như không phát thải CO₂ trực tiếp. Tuy nhiên, vòng đời thiết bị vẫn có phát thải.'},
+{t:'🦇 Tác động và giải pháp',q:'Cách nào giúp giảm nguy cơ turbine gây hại cho chim và dơi?',o:['Lắp turbine ở bất kỳ vị trí nào','Bỏ qua việc khảo sát môi trường','Tăng tốc độ quay trong mọi điều kiện','Chọn vị trí phù hợp, đánh giá tác động và dùng radar/AI để hỗ trợ giám sát'],a:3,e:'Cần đánh giá tác động môi trường, chọn vị trí hợp lý và có thể dùng radar/AI để giảm nguy cơ va chạm.'}];
+const TIME=20,$=id=>document.getElementById(id);
+let Q,i,score,streak,right,locked,left,timer;
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function show(id){['start','play','end'].forEach(s=>$(s).hidden=s!==id)}
+function hud(){$('step').textContent='Câu '+(i+1)+'/'+Q.length;$('sc').textContent='⭐ '+score+' điểm';$('st').textContent='🔥 '+streak}
+function begin(){clearInterval(timer);Q=SRC.map(s=>({t:s.t,q:s.q,e:s.e,o:shuffle(s.o.map((x,k)=>({x,ok:k===s.a})))}));i=0;score=0;streak=0;right=0;show('play');ask()}
+function ask(){
+  locked=false;const c=Q[i];hud();
+  $('topic').textContent=c.t;$('q').textContent=c.q;
+  $('fb').hidden=true;$('nx').hidden=true;$('ans').innerHTML='';
+  c.o.forEach((o,k)=>{const b=document.createElement('button');b.type='button';b.className='a';
+    const l=document.createElement('span');l.className='l';l.textContent='ABCD'[k];
+    const t=document.createElement('span');t.textContent=o.x;b.append(l,t);b.onclick=()=>pick(k);$('ans').appendChild(b)});
+  left=TIME;draw();clearInterval(timer);timer=setInterval(tick,100)
+}
+function draw(){const b=$('bar');b.style.width=(left/TIME*100)+'%';b.className=left<6?'low':''}
+function tick(){left=Math.max(0,left-.1);draw();if(left<=0)pick(-1)}
+function pick(k){
+  if(locked)return;locked=true;clearInterval(timer);
+  const c=Q[i],ok=k>=0&&c.o[k].ok;let pts=0;
+  [...$('ans').children].forEach((b,j)=>{b.disabled=true;if(c.o[j].ok)b.classList.add('good');if(j===k&&!ok)b.classList.add('bad')});
+  if(ok){streak++;pts=100+Math.round(left/TIME*50)+(streak>=2?20:0);score+=pts;right++}else streak=0;
+  hud();
+  const fb=$('fb'),lead=document.createElement('b');
+  lead.textContent=ok?'Chính xác! +'+pts+' điểm. ':(k<0?'Hết giờ! ':'Chưa đúng. ');
+  fb.textContent='';fb.append(lead,c.e);fb.hidden=false;
+  $('nx').textContent=i===Q.length-1?'Xem kết quả':'Câu tiếp theo';$('nx').hidden=false
+}
+function next(){if(i<Q.length-1){i++;ask()}else finish()}
+function finish(){
+  show('end');const r=right/Q.length;
+  $('trophy').textContent=r===1?'🏆':r>=.6?'🌟':'🌱';
+  $('rt').textContent=r===1?'Xuất sắc luôn!':r>=.6?'Làm tốt lắm!':'Thử lại lần nữa nhé!';
+  $('rx').textContent=r===1?'Cả lớp đã nắm rất chắc các ý chính về năng lượng gió.':r>=.6?'Đã nắm được phần lớn kiến thức trọng tâm.':'Xem lại phần giải thích rồi chơi lại để nhớ các ý quan trọng.';
+  $('fin').textContent='Đúng '+right+'/'+Q.length+' câu • '+score+' điểm';
+  if(r>=.6)confetti()
+}
+function confetti(){const s=['🍃','🌱','⭐','💨','✨'];for(let k=0;k<26;k++){const e=document.createElement('span');e.className='spark';e.textContent=s[k%s.length];e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*.7+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3300)}}
+$('go').onclick=begin;$('again').onclick=begin;$('nx').onclick=next;
+$('fs').onclick=()=>{try{(document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()).catch(()=>{})}catch(e){}};
+document.addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key.toLowerCase(),onBtn=document.activeElement&&document.activeElement.tagName==='BUTTON'&&(k==='enter'||k===' ');
+  if(onBtn)return;
+  if(!$('start').hidden){if(k==='enter'||k===' '){e.preventDefault();begin()}}
+  else if(!$('play').hidden){
+    const n='abcd'.indexOf(k),m='1234'.indexOf(k),idx=n>=0?n:m;
+    if(idx>=0&&idx<Q[i].o.length)pick(idx);
+    else if(locked&&(k==='enter'||k===' '||k==='arrowright')){e.preventDefault();next()}
+  }else if(k==='enter'||k==='r')begin()
+});
+</script>
+</body>
+</html>
