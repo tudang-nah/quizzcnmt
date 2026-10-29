@@ -7,40 +7,66 @@
 <meta name="description" content="Thử thách Năng lượng gió - Nhóm 05. Trò chơi trắc nghiệm 5 câu về năng lượng gió và tác động môi trường.">
 <meta name="theme-color" content="#1c6476">
 <meta property="og:title" content="Thử thách Năng lượng gió">
-<meta property="og:description" content="5 câu hỏi, mỗi câu 60 giây. Trả lời càng nhanh, điểm càng cao.">
+<meta property="og:description" content="5 câu hỏi, mỗi câu 60 giây. Trả lời đúng liên tiếp để gió mạnh lên, turbine quay nhanh hơn!">
 <meta property="og:type" content="website">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root{--teal:#1c6476;--soft:#def1f1;--mid:#a1d3d2;--ink:#3f2e12;--paper:#fff;--grid:#dde6e6;--good:#4d8a3a;--bad:#d9544b;--on-teal:#fff;--c1:#1c6476;--c2:#7d8a3a;--c3:#e5655c;--c4:#d99a2b;
+:root{--teal:#1c6476;--soft:#def1f1;--mid:#a1d3d2;--ink:#3f2e12;--paper:#fff;--good:#4d8a3a;--bad:#d9544b;--on-teal:#fff;--c1:#1c6476;--c2:#7d8a3a;--c3:#e5655c;--c4:#d99a2b;
+--sky1:#bfe6ee;--sky2:#f1fbf8;--cloud:#ffffff;--h1:#b7dcc0;--h2:#8cc3a0;--h3:#5fa585;--tower:#ffffff;--blade:#ffffff;--hub:#d99a2b;--line:#ffffffcc;
+--spin:7s;--gust:10s;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--grid:#1c343b;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;color-scheme:dark}}
-:root[data-theme="dark"]{--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--grid:#1c343b;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;--sky1:#0a1f27;--sky2:#17424e;--cloud:#2a5663;--h1:#1d4a50;--h2:#173f45;--h3:#10333a;--tower:#cfe7ea;--blade:#e8f6f6;--line:#7cc4d455;color-scheme:dark}}
+:root[data-theme="dark"]{--teal:#7cc4d4;--soft:#1b3d46;--mid:#2c5963;--ink:#f3ead9;--paper:#0f2228;--good:#7fc46a;--bad:#f0877f;--on-teal:#0f2a31;--sky1:#0a1f27;--sky2:#17424e;--cloud:#2a5663;--h1:#1d4a50;--h2:#173f45;--h3:#10333a;--tower:#cfe7ea;--blade:#e8f6f6;--line:#7cc4d455;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px;color:var(--ink);font:500 18px/1.5 Quicksand,"Trebuchet MS",system-ui,sans-serif}
-.wrap{max-width:1040px;margin:0 auto;padding:20px 18px 40px}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--sky1),var(--sky2) 70%);background-attachment:fixed;color:var(--ink);font:500 18px/1.5 Quicksand,"Trebuchet MS",system-ui,sans-serif;overflow-x:hidden}
+
+/* ===== nền bầu trời + đồng gió ===== */
+.scene{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.cloud{position:absolute;left:-30vw;width:200px;height:60px;border-radius:60px;background:var(--cloud);opacity:.85;animation:drift linear infinite;animation-duration:calc(var(--gust)*var(--m,6))}
+.cloud::before,.cloud::after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud::before{width:80px;height:80px;left:30px;top:-38px}
+.cloud::after{width:60px;height:60px;left:100px;top:-24px}
+@keyframes drift{to{transform:translateX(160vw)}}
+.wl{position:absolute;left:-40vw;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--line),transparent);animation:drift linear infinite;animation-duration:calc(var(--gust)*var(--m,1))}
+.hills{position:absolute;left:0;right:0;bottom:0;height:clamp(110px,24vh,230px)}
+.hills svg{width:100%;height:100%;display:block}
+.tb{position:absolute;bottom:clamp(30px,7vh,70px);width:calc(var(--s)*clamp(34px,5vw,60px));transform:translateX(-50%)}
+.tb svg{width:100%;height:auto;display:block;overflow:visible}
+.blade{transform-origin:32px 22px;animation:spin linear infinite;animation-duration:calc(var(--spin)*var(--k,1))}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gust{position:fixed;left:-35vw;width:35vw;height:5px;border-radius:5px;background:linear-gradient(90deg,transparent,var(--teal),transparent);pointer-events:none;z-index:5;animation:zoom .9s ease-out forwards}
+@keyframes zoom{to{transform:translateX(150vw);opacity:0}}
+
+/* ===== giao diện ===== */
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:20px 18px clamp(130px,26vh,250px)}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:10px;font:800 22px/1 "Baloo 2",system-ui,sans-serif;color:var(--teal)}
 .brand svg{width:44px;height:44px}
-.rot{transform-origin:32px 22px;animation:spin 6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ghost{border:2px solid var(--teal);background:transparent;color:var(--teal);border-radius:999px;padding:8px 14px;font:700 14px Quicksand,sans-serif;cursor:pointer}
-.card{background:var(--soft);border-radius:56px 84px 60px 76px/64px 60px 80px 56px;padding:clamp(22px,4vw,48px);position:relative}
+.ghost{border:2px solid var(--teal);background:var(--soft);color:var(--teal);border-radius:999px;padding:8px 14px;font:700 14px Quicksand,sans-serif;cursor:pointer}
+.card{background:var(--soft);border-radius:56px 84px 60px 76px/64px 60px 80px 56px;padding:clamp(22px,4vw,48px);position:relative;box-shadow:0 10px 0 var(--mid)}
 h1,h2{font-family:"Baloo 2",system-ui,sans-serif;font-weight:800;color:var(--teal);line-height:1.05;margin:0 0 12px}
 h1{font-size:clamp(38px,7vw,76px)}
 h2{font-size:clamp(30px,5vw,52px)}
 p{margin:0 0 14px}
 .center{text-align:center}
+.hero-tb{width:clamp(120px,22vw,190px);margin:-6px auto 6px}
+.hero-tb svg{width:100%;height:auto;display:block;overflow:visible}
+.hero-tb{--tower:var(--mid);--blade:var(--teal)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 20px}
+.chips span{background:var(--paper);color:var(--teal);font-weight:700;border-radius:999px;padding:6px 16px;font-size:16px}
 .btn{border:0;border-radius:18px;background:var(--teal);color:var(--on-teal);font:800 clamp(18px,2.4vw,24px) "Baloo 2",sans-serif;padding:12px 28px;cursor:pointer;box-shadow:0 5px 0 var(--mid)}
 .btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--mid)}
 button:focus-visible{outline:4px solid var(--c4);outline-offset:3px}
 .keys{color:var(--teal);font-weight:700;font-size:15px;margin-top:18px}
 .hud{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font:800 20px "Baloo 2",sans-serif;color:var(--teal)}
 .hud span{background:var(--paper);border-radius:999px;padding:4px 16px}
-.bar{height:12px;border-radius:99px;background:var(--paper);overflow:hidden;margin:14px 0 22px}
+.hud .wind{display:inline-flex;gap:6px;align-items:center}
+.hud .wind.pop{animation:pop .5s}
+@keyframes pop{40%{transform:scale(1.18)}}
+.bar{height:14px;border-radius:99px;background:var(--paper);overflow:hidden;margin:14px 0 22px}
 .bar i{display:block;height:100%;width:100%;background:var(--c2);border-radius:99px;transition:background .3s}
 .bar i.low{background:var(--c3)}
 .topic{display:inline-block;background:var(--paper);color:var(--teal);font-weight:700;border-radius:12px;padding:4px 12px;margin-bottom:10px}
@@ -53,39 +79,61 @@ button:focus-visible{outline:4px solid var(--c4);outline-offset:3px}
 .a:nth-child(1) .l{background:var(--c1)}.a:nth-child(2) .l{background:var(--c2)}.a:nth-child(3) .l{background:var(--c3)}.a:nth-child(4) .l{background:var(--c4)}
 .a.good{border-color:var(--good);background:color-mix(in srgb,var(--good) 22%,var(--paper))}
 .a.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 20%,var(--paper))}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
 .fb{margin-top:18px;background:var(--paper);border-radius:22px;padding:14px 18px;font-size:clamp(16px,2vw,23px);font-weight:700}
 .fb b{color:var(--teal)}
 .row{display:flex;justify-content:flex-end;margin-top:16px}
+.nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.nav .sp{flex:1}
+.nav .ghost{background:var(--paper)}
+.nav .ghost:disabled{opacity:.4;cursor:default}
 .big{font:800 clamp(60px,12vw,130px)/1 "Baloo 2",sans-serif;color:var(--teal);margin:6px 0}
-.spark{position:fixed;top:-40px;font-size:30px;animation:fall 2.4s ease-in forwards;pointer-events:none}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.spark{position:fixed;top:-40px;font-size:30px;z-index:6;pointer-events:none;animation:fall 2.8s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--dx,40vw),110vh) rotate(540deg)}}
 @media(max-width:640px){.ans{grid-template-columns:1fr}.card{border-radius:36px}}
-@media(prefers-reduced-motion:reduce){.rot,.spark{animation:none}.a,.bar i{transition:none}}
+@media(prefers-reduced-motion:reduce){.blade,.cloud,.wl,.spark,.gust{animation:none}.a,.bar i{transition:none}.shake,.pop{animation:none}.cloud{left:10vw}}
 [hidden]{display:none!important}
 </style>
 </head>
 <body>
+
+<div class="scene" aria-hidden="true">
+  <div id="sky"></div>
+  <div class="hills">
+    <svg viewBox="0 0 1200 240" preserveAspectRatio="none">
+      <path d="M0 120C150 60 300 70 450 110S750 170 900 110 1100 60 1200 100V240H0z" fill="var(--h1)"/>
+      <path d="M0 160C200 110 350 130 520 160S850 200 1000 150 1150 120 1200 140V240H0z" fill="var(--h2)"/>
+      <path d="M0 205C200 175 400 190 600 205S1000 225 1200 190V240H0z" fill="var(--h3)"/>
+    </svg>
+    <div id="farm"></div>
+  </div>
+</div>
+
 <main class="wrap">
 <header class="top">
-  <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M30 24h4l3 38H27z" fill="#a1d3d2"/><g class="rot" fill="#1c6476"><path d="M32 22C28 12 29 5 32 2c3 3 4 10 0 20z"/><path d="M32 22c10-2 16 1 19 5-4 3-11 3-19-5z"/><path d="M32 22c-8 6-8 13-8 18 5-2 10-8 8-18z"/></g><circle cx="32" cy="22" r="4" fill="#d99a2b"/></svg>Nhóm 05</div>
+  <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="32" fill="var(--soft)"/><path d="M30.6 30h2.8L35 54h-6z" fill="var(--mid)"/><g transform="translate(0 6)"><g class="blade" fill="var(--teal)" style="--k:.9"><path d="M32 22C28.5 16 29.3 10 32 6C34.7 10 35.5 16 32 22z"/><path d="M32 22C28.5 16 29.3 10 32 6C34.7 10 35.5 16 32 22z" transform="rotate(120 32 22)"/><path d="M32 22C28.5 16 29.3 10 32 6C34.7 10 35.5 16 32 22z" transform="rotate(240 32 22)"/></g></g><circle cx="32" cy="28" r="3" fill="#d99a2b"/></svg>Nhóm 05</div>
   <button class="ghost" id="fs" type="button">Toàn màn hình</button>
 </header>
 
 <section class="card center" id="start">
+  <div class="hero-tb" id="hero"></div>
   <h1>Thử thách<br>Năng lượng gió</h1>
-  <p>5 câu hỏi, mỗi câu <span id="tm">60</span> giây. Trả lời càng nhanh, điểm càng cao.</p>
+  <p>Trả lời đúng liên tiếp để gió mạnh dần, turbine quay nhanh hơn. Trả lời càng nhanh, điểm càng cao.</p>
+  <div class="chips"><span>5 câu hỏi</span><span><b id="tm">60</b> giây mỗi câu</span><span>🌬️ Combo gió</span></div>
   <button class="btn" id="go" type="button">Bắt đầu chơi</button>
   <p class="keys">Phím A–D hoặc 1–4 để chọn đáp án. Enter hoặc phím cách để sang câu tiếp.</p>
 </section>
 
 <section class="card" id="play" hidden>
-  <div class="hud"><span id="step"></span><span id="sc"></span><span id="st"></span></div>
+  <div class="hud"><span id="step"></span><span id="sc"></span><span class="wind" id="st"></span></div>
   <div class="bar"><i id="bar"></i></div>
   <div class="topic" id="topic"></div>
   <h2 class="q" id="q"></h2>
   <div class="ans" id="ans"></div>
   <div class="fb" id="fb" hidden></div>
   <div class="row"><button class="btn" id="nx" type="button" hidden></button></div>
+  <div class="nav"><button class="ghost" id="home" type="button">🏠 Màn hình chính</button><span class="sp"></span><button class="ghost" id="pv" type="button">◀ Câu trước</button><button class="ghost" id="nv" type="button">Câu sau ▶</button></div>
 </section>
 
 <section class="card center" id="end" hidden>
@@ -94,6 +142,7 @@ button:focus-visible{outline:4px solid var(--c4);outline-offset:3px}
   <p id="rx"></p>
   <p class="q" id="fin"></p>
   <button class="btn" id="again" type="button">Chơi lại</button>
+  <p><button class="ghost" id="home2" type="button" style="margin-top:14px;background:var(--paper)">🏠 Màn hình chính</button></p>
   <p class="keys">Nhấn R hoặc Enter để chơi lại.</p>
 </section>
 </main>
@@ -106,44 +155,92 @@ const SRC=[
 {t:'🍃 Tác động tích cực',q:'Vì sao điện gió được xem là nguồn năng lượng phát thải thấp?',o:['Vì turbine hấp thụ toàn bộ CO₂ trong không khí','Vì khi vận hành không đốt nhiên liệu nên phát thải trực tiếp rất thấp','Vì chế tạo turbine không cần vật liệu','Vì điện gió không tạo ra bất kỳ tác động môi trường nào'],a:1,e:'Khi vận hành, điện gió gần như không phát thải CO₂ trực tiếp. Tuy nhiên, vòng đời thiết bị vẫn có phát thải.'},
 {t:'🦇 Tác động và giải pháp',q:'Cách nào giúp giảm nguy cơ turbine gây hại cho chim và dơi?',o:['Lắp turbine ở bất kỳ vị trí nào','Bỏ qua việc khảo sát môi trường','Tăng tốc độ quay trong mọi điều kiện','Chọn vị trí phù hợp, đánh giá tác động và dùng radar/AI để hỗ trợ giám sát'],a:3,e:'Cần đánh giá tác động môi trường, chọn vị trí hợp lý và có thể dùng radar/AI để giảm nguy cơ va chạm.'}];
 const TIME=60,$=id=>document.getElementById(id);
-let Q,i,score,streak,right,locked,left,timer;
+const WIND=[{n:'Gió nhẹ',spin:7,gust:10},{n:'Gió vừa',spin:4.5,gust:7},{n:'Gió khá mạnh',spin:3,gust:4.5},{n:'Gió mạnh',spin:1.6,gust:2.8}];
+let Q,i,locked,left,timer;
+
+/* ---- dựng cảnh: turbine, mây, đường gió ---- */
+function tbSVG(){return '<svg viewBox="0 0 64 110" aria-hidden="true"><path d="M30.5 36h3L36 108H28z" fill="var(--tower)"/><g transform="translate(32 34) scale(1.5) translate(-32 -22)"><g class="blade" fill="var(--blade)"><path d="M32 22C27.5 14 28.5 6 32 1C35.5 6 36.5 14 32 22z"/><path d="M32 22C27.5 14 28.5 6 32 1C35.5 6 36.5 14 32 22z" transform="rotate(120 32 22)"/><path d="M32 22C27.5 14 28.5 6 32 1C35.5 6 36.5 14 32 22z" transform="rotate(240 32 22)"/></g></g><circle cx="32" cy="34" r="3.5" fill="var(--hub)"/></svg>'}
+function buildScene(){
+  const farm=$('farm');
+  [[6,.8,1.1],[17,1.1,.9],[30,.7,1.3],[44,1.2,1],[58,.8,.85],[70,1.05,1.2],[82,.75,.95],[94,1,1.05]].forEach(([l,s,k],n)=>{
+    const d=document.createElement('div');d.className='tb';d.style.cssText='left:'+l+'%;--s:'+s+';--k:'+k+';z-index:'+n%3;d.innerHTML=tbSVG();farm.appendChild(d)});
+  const sky=$('sky');
+  [[8,5,9],[22,12,7],[14,22,11],[30,35,6]].forEach(([top,delay,m],n)=>{
+    const c=document.createElement('div');c.className='cloud';c.style.cssText='top:'+top+'vh;--m:'+m+';animation-delay:-'+(n*9)+'s;transform:scale('+(0.7+n*.2)+')';sky.appendChild(c)});
+  [[14,1.2],[27,.8],[41,1.4],[55,.9],[63,1.1]].forEach(([top,m],n)=>{
+    const w=document.createElement('div');w.className='wl';w.style.cssText='top:'+top+'vh;width:'+(18+n*4)+'vw;--m:'+m+';animation-delay:-'+(n*1.7)+'s';sky.appendChild(w)});
+  $('hero').innerHTML=tbSVG();
+}
+function setWind(l){const w=WIND[l],r=document.documentElement.style;r.setProperty('--spin',w.spin+'s');r.setProperty('--gust',w.gust+'s')}
+function gust(){for(let k=0;k<3;k++){const g=document.createElement('div');g.className='gust';g.style.top=(12+Math.random()*60)+'vh';g.style.animationDelay=(k*.12)+'s';document.body.appendChild(g);setTimeout(()=>g.remove(),1500)}}
+
 function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
 function show(id){['start','play','end'].forEach(s=>$(s).hidden=s!==id)}
-function hud(){$('step').textContent='Câu '+(i+1)+'/'+Q.length;$('sc').textContent='⭐ '+score+' điểm';$('st').textContent='🔥 '+streak}
-function begin(){clearInterval(timer);Q=SRC.map(s=>({t:s.t,q:s.q,e:s.e,o:shuffle(s.o.map((x,k)=>({x,ok:k===s.a})))}));i=0;score=0;streak=0;right=0;show('play');ask()}
+function streakAt(j){let n=0;for(;j>=0&&Q[j].first;j--)n++;return n}
+function curStreak(){const c=Q[i];return c.done?streakAt(i):(c.tries?0:(i>0?streakAt(i-1):0))}
+function level(){return Math.min(curStreak(),3)}
+function total(){return Q.reduce((a,c)=>a+c.pts,0)}
+function hud(){const n=curStreak();$('step').textContent='Câu '+(i+1)+'/'+Q.length;$('sc').textContent='⭐ '+total()+' điểm';$('st').textContent='🌬️ '+WIND[level()].n+(n>0?' ×'+n:'')}
+function begin(){clearInterval(timer);Q=SRC.map(s=>({t:s.t,q:s.q,e:s.e,o:shuffle(s.o.map((x,k)=>({x,ok:k===s.a}))),done:false,tries:0,wrong:[],first:false,pts:0,left:TIME,timeout:false}));i=0;setWind(0);show('play');ask()}
+function showFb(c){
+  const fb=$('fb'),lead=document.createElement('b');
+  if(c.done)lead.textContent=c.first?'Chính xác! +'+c.pts+' điểm. ':c.pts?'Đúng rồi! +'+c.pts+' điểm (chọn lại). ':'Hết giờ! ';
+  else lead.textContent='Chưa đúng, chọn lại đáp án khác nhé! ';
+  fb.textContent='';fb.append(lead,c.done?c.e:'Còn '+(c.o.length-c.tries)+' đáp án.');fb.hidden=false
+}
 function ask(){
-  locked=false;const c=Q[i];hud();
+  clearInterval(timer);const c=Q[i];locked=c.done;setWind(level());hud();
   $('topic').textContent=c.t;$('q').textContent=c.q;
   $('fb').hidden=true;$('nx').hidden=true;$('ans').innerHTML='';
   c.o.forEach((o,k)=>{const b=document.createElement('button');b.type='button';b.className='a';
     const l=document.createElement('span');l.className='l';l.textContent='ABCD'[k];
-    const t=document.createElement('span');t.textContent=o.x;b.append(l,t);b.onclick=()=>pick(k);$('ans').appendChild(b)});
-  left=TIME;draw();clearInterval(timer);timer=setInterval(tick,100)
+    const t=document.createElement('span');t.textContent=o.x;b.append(l,t);b.onclick=()=>pick(k);
+    if(c.done){b.disabled=true;if(o.ok)b.classList.add('good')}
+    if(c.wrong.includes(k)){b.disabled=true;b.classList.add('bad')}
+    $('ans').appendChild(b)});
+  if(c.done||c.tries)showFb(c);
+  if(c.done){$('nx').textContent=i===Q.length-1?'Xem kết quả':'Câu tiếp theo';$('nx').hidden=false}
+  $('pv').disabled=i===0;$('nv').disabled=i===Q.length-1;
+  left=c.left;draw();if(!c.done)timer=setInterval(tick,100)
 }
 function draw(){const b=$('bar');b.style.width=(left/TIME*100)+'%';b.className=left<TIME*.2?'low':''}
-function tick(){left=Math.max(0,left-.1);draw();if(left<=0)pick(-1)}
+function tick(){left=Math.max(0,left-.1);Q[i].left=left;draw();if(left<=0)pick(-1)}
 function pick(k){
-  if(locked)return;locked=true;clearInterval(timer);
-  const c=Q[i],ok=k>=0&&c.o[k].ok;let pts=0;
-  [...$('ans').children].forEach((b,j)=>{b.disabled=true;if(c.o[j].ok)b.classList.add('good');if(j===k&&!ok)b.classList.add('bad')});
-  if(ok){streak++;pts=100+Math.round(left/TIME*50)+(streak>=2?20:0);score+=pts;right++}else streak=0;
-  hud();
-  const fb=$('fb'),lead=document.createElement('b');
-  lead.textContent=ok?'Chính xác! +'+pts+' điểm. ':(k<0?'Hết giờ! ':'Chưa đúng. ');
-  fb.textContent='';fb.append(lead,c.e);fb.hidden=false;
-  $('nx').textContent=i===Q.length-1?'Xem kết quả':'Câu tiếp theo';$('nx').hidden=false
+  const c=Q[i];if(c.done)return;
+  if(k>=0&&c.wrong.includes(k))return;
+  const ok=k>=0&&c.o[k].ok;c.left=left;
+  if(k>=0&&!ok){
+    c.tries++;c.wrong.push(k);ask();
+    const p=$('play');p.classList.remove('shake');void p.offsetWidth;p.classList.add('shake');return
+  }
+  clearInterval(timer);c.done=true;
+  if(ok){
+    if(c.tries===0){c.first=true;c.pts=100+Math.round(left/TIME*50)+(streakAt(i)>=2?20:0)}else c.pts=50;
+    gust()
+  }else c.timeout=true;
+  ask();
+  const w=$('st');w.classList.remove('pop');void w.offsetWidth;w.classList.add('pop')
 }
-function next(){if(i<Q.length-1){i++;ask()}else finish()}
+function go(n){if(n<0||n>=Q.length)return;Q[i].left=left;i=n;ask()}
+function next(){if(i<Q.length-1)go(i+1);else finish()}
+function home(ask_){
+  if(ask_&&Q&&Q.some(c=>c.done||c.tries)&&!confirm('Về màn hình chính? Tiến trình hiện tại sẽ bị xóa.'))return;
+  clearInterval(timer);setWind(0);show('start')
+}
 function finish(){
-  show('end');const r=right/Q.length;
+  clearInterval(timer);show('end');
+  const right=Q.filter(c=>c.first).length,score=total(),r=right/Q.length;
   $('trophy').textContent=r===1?'🏆':r>=.6?'🌟':'🌱';
   $('rt').textContent=r===1?'Xuất sắc luôn!':r>=.6?'Làm tốt lắm!':'Thử lại lần nữa nhé!';
-  $('rx').textContent=r===1?'Cả lớp đã nắm rất chắc các ý chính về năng lượng gió.':r>=.6?'Đã nắm được phần lớn kiến thức trọng tâm.':'Xem lại phần giải thích rồi chơi lại để nhớ các ý quan trọng.';
+  $('rx').textContent=r===1?'Cả lớp đã nắm rất chắc các ý chính về năng lượng gió. Cả cánh đồng turbine đang quay hết tốc lực!':r>=.6?'Đã nắm được phần lớn kiến thức trọng tâm.':'Xem lại phần giải thích rồi chơi lại để nhớ các ý quan trọng.';
   $('fin').textContent='Đúng '+right+'/'+Q.length+' câu • '+score+' điểm';
+  setWind(r===1?3:r>=.6?2:0);
   if(r>=.6)confetti()
 }
-function confetti(){const s=['🍃','🌱','⭐','💨','✨'];for(let k=0;k<26;k++){const e=document.createElement('span');e.className='spark';e.textContent=s[k%s.length];e.style.left=Math.random()*100+'vw';e.style.animationDelay=Math.random()*.7+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3300)}}
-$('tm').textContent=TIME;$('go').onclick=begin;$('again').onclick=begin;$('nx').onclick=next;
+function confetti(){const s=['🍃','🌱','⭐','💨','🍃'];for(let k=0;k<30;k++){const e=document.createElement('span');e.className='spark';e.textContent=s[k%s.length];e.style.left=Math.random()*70+'vw';e.style.setProperty('--dx',(20+Math.random()*50)+'vw');e.style.animationDelay=Math.random()*.9+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),3900)}}
+
+buildScene();$('tm').textContent=TIME;
+$('go').onclick=begin;$('again').onclick=begin;$('nx').onclick=next;$('pv').onclick=()=>go(i-1);$('nv').onclick=()=>go(i+1);$('home').onclick=()=>home(true);$('home2').onclick=()=>home(false);
 $('fs').onclick=()=>{try{(document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()).catch(()=>{})}catch(e){}};
 document.addEventListener('keydown',e=>{
   if(e.metaKey||e.ctrlKey||e.altKey)return;
@@ -153,7 +250,9 @@ document.addEventListener('keydown',e=>{
   else if(!$('play').hidden){
     const n='abcd'.indexOf(k),m='1234'.indexOf(k),idx=n>=0?n:m;
     if(idx>=0&&idx<Q[i].o.length)pick(idx);
+    else if(k==='arrowleft')go(i-1);
     else if(locked&&(k==='enter'||k===' '||k==='arrowright')){e.preventDefault();next()}
+    else if(k==='arrowright')go(i+1);
   }else if(k==='enter'||k==='r')begin()
 });
 </script>
